@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESM Union website</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .view { display: none; }
+        .view.active { display: block; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+
+<!-- Login Overlay -->
+<div id="login-overlay" class="fixed inset-0 bg-blue-900 flex items-center justify-center z-50 p-4">
+    <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-sm text-center">
+        <h2 class="text-2xl font-bold text-blue-900 mb-6">ESM Union Login</h2>
+        <form id="login-form" class="space-y-4">
+            <input type="text" id="username" placeholder="Name" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+            <input type="password" id="password" placeholder="AD:NO" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+            <button type="submit" class="w-full py-3 bg-blue-900 text-white font-bold rounded-lg hover:bg-blue-800 transition">Enter Portal</button>
+        </form>
+        <p id="error-msg" class="text-red-600 mt-4 font-semibold text-sm"></p>
+    </div>
+</div>
+
+
+<!-- Site Container -->
+<div id="site-container" class="hidden min-h-screen flex flex-col">
+    <header class="bg-blue-900 text-white p-6 text-center shadow-md">
+        <h1 class="text-3xl font-extrabold tracking-tight">ESM Union</h1>
+    </header>
+   
+    <nav class="bg-gray-900 text-white p-4 flex flex-wrap justify-center gap-6 font-semibold">
+        <a onclick="navigate('home')" class="cursor-pointer hover:text-cyan-400 transition">Home</a>
+        <a onclick="navigate('members')" class="cursor-pointer hover:text-cyan-400 transition">Members</a>
+        <a onclick="navigate('publications')" class="cursor-pointer hover:text-cyan-400 transition">Publications</a>
+        <a onclick="navigate('wing')" class="cursor-pointer hover:text-cyan-400 transition">Wing</a>
+    </nav>
+
+
+    <main id="main-content" class="flex-grow p-6">
+        <div id="home" class="view active text-center py-20 bg-gradient-to-br from-blue-900 to-cyan-600 rounded-xl text-white shadow-lg">
+            <h1 class="text-5xl font-bold mb-4">Welcome to ESM Union</h1>
+            <p class="text-xl opacity-90">15th Batch - SFADC</p>
+        </div>
+
+
+        <div id="members" class="view">
+            <div class="overflow-x-auto max-w-2xl mx-auto bg-white rounded-xl shadow-md p-6">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b-2 border-blue-900 text-blue-900">
+                            <th class="py-3 px-4">No</th>
+                            <th class="py-3 px-4">Name</th>
+                            <th class="py-3 px-4">AD:NO</th>
+                        </tr>
+                    </thead>
+                    <tbody id="member-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div id="publications" class="view text-center py-12">
+            <h1 class="text-3xl font-bold text-blue-900 mb-4">Publications</h1>
+            <p class="text-gray-600">Stay tuned for the latest articles, newsletters, and batch updates.</p>
+        </div>
+
+
+        <div id="wing" class="view text-center py-12">
+            <h1 class="text-3xl font-bold text-blue-900 mb-8">Organizational Wings</h1>
+            <div id="wing-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-4xl mx-auto"></div>
+        </div>
+    </main>
+
+
+    <footer class="bg-gray-900 text-gray-400 text-center py-4 text-sm">
+        esmunion2023@gmail.com
+    </footer>
+</div>
+
+
+<script>
+    const validMembers = [
+        { name: "Shibili", ad: "607" }, { name: "Sahad", ad: "593" },
+        { name: "Shamil", ad: "610" }, { name: "Farzeen", ad: "606" },
+        { name: "Nabeel", ad: "616" }, { name: "Anshid", ad: "583" },
+        { name: "Rihan", ad: "596" }, { name: "Rishel", ad: "619" },
+        { name: "Fadil", ad: "586" }, { name: "Thammeem", ad: "585" },
+        { name: "Swabeeh", ad: "605" }, { name: "Rashid", ad: "536" },
+        { name: "Faheem", ad: "595" }, { name: "Rushaid", ad: "611" },
+        { name: "Siyan", ad: "584" }, { name: "Rabeeh", ad: "609" },
+        { name: "Salik", ad: "594" }, { name: "Kaif", ad: "534" },
+        { name: "Mazin", ad: "608" }, { name: "Ameen", ad: "617" },
+        { name: "Salih", ad: "600" }, { name: "Fasalul Haq", ad: "602" },
+        { name: "Anshif", ad: "587" }, { name: "Hamdan", ad: "598" },
+        { name: "Shamil", ad: "592" }, { name: "Aflah", ad: "591" }
+    ];
+
+
+    const wings = ["Arabic Wing", "Malayalam Wing", "Urdu Wing", "Hindi Wing", "Art Wing", "Sports Wing", "English Wing"];
+
+
+    // Initialize UI
+    const tbody = document.getElementById('member-table-body');
+    validMembers.forEach((m, index) => {
+        tbody.innerHTML += `<tr class="border-b hover:bg-gray-50">
+            <td class="py-3 px-4">${index + 3}</td>
+            <td class="py-3 px-4 font-medium">${m.name}</td>
+            <td class="py-3 px-4">${m.ad}</td>
+        </tr>`;
+    });
+
+
+    const wingList = document.getElementById('wing-list');
+    wings.forEach(w => {
+        wingList.innerHTML += `<div class="bg-white p-4 rounded-lg shadow border-l-4 border-blue-900 font-bold text-blue-900">${w}</div>`;
+    });
+
+
+    function navigate(viewId) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.getElementById(viewId).classList.add('active');
+    }
+
+
+             document.getElementById('login-overlay').style.display = 'none';   document.getElementById('login-form').onsubmit = (e) => {
+        e.preventDefault();
+        const u = document.getElementById('username').value.trim().toLowerCase();
+        const p = document.getElementById('password').value.trim();
+        const err = document.getElementById('error-msg');
+
+
+        if (validMembers.some(m => m.name.toLowerCase() === u && m.ad === p)) {
+
+
+            document.getElementById('site-container').classList.remove('hidden');
+        } else {
+            err.textContent = 'Invalid credentials. Please try again.';
+        }
+    }
+</script>
+</body>
+</html>
+
